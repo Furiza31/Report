@@ -1,7 +1,7 @@
 # Compte Rendu
 
 **Nom** : Hugo Wendjaneh
-**Date** : {{ date }}
+**Date** : {{ DATE }}
 **Sujet** : {{ sujet }}
 **Contexte** : {{ contexte }}
 
@@ -83,4 +83,4 @@ Inclure ici des documents ou des informations complémentaires qui ont été uti
 ### Signature
 
 Nom et titre : Hugo Wendjaneh
-Date : {{ date }}
+Date : {{ DATE }}
