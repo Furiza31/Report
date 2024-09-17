@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compte rendu</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/prettify.css"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script defer>
+      // select all <pre> elements who get a <code> child
+      const pres = document.querySelectorAll("pre > code");
+      pres.forEach((pre) => {
+        // add prettyprint class to the parent <pre> element
+        pre.parentNode.classList.add("prettyprint");
+      });
+
+      // select all <a> elements and add target="_blank" attribute
+      const links = document.querySelectorAll("a");
+      links.forEach((link) => {
+        link.setAttribute("target", "_blank");
+      });
+
+      // select all checkboxes and remove the disabled attribute
+      const checkboxes = document.querySelectorAll("input[type=checkbox]");
+      checkboxes.forEach((checkbox) => {
+        checkbox.removeAttribute("disabled");
+      });
+
+      const pagenizer = () => {
+        const content = document.getElementById("base_content");
+        const headerHeight = 40;
+        const footerHeight = 42;
+        const bodyPadding = document.body.style.padding;
+        const pageHeight =
+          window.innerHeight - bodyPadding * 2 - headerHeight - footerHeight;
+        const sections = [];
+
+        // Store all children of the content as an array for easier manipulation
+        const contentChildren = Array.from(content.children);
+
+        // This will keep track of the remaining content
+        let remainingChildren = [...contentChildren];
+
+        // Create sections until all content is distributed
+        while (remainingChildren.length > 0) {
+          const section = document.createElement("section");
+          sections.push(section);
+          document.body.appendChild(section);
+
+          let currentHeight = 0;
+
+          // Append children until the section height reaches the pageHeight
+          while (remainingChildren.length > 0 && currentHeight < pageHeight) {
+            const child = remainingChildren.shift();
+
+            if (child.classList.contains("new_page")) break;
+            else {
+              section.appendChild(child);
+            }
+
+            // Update current height of the section
+            currentHeight = section.scrollHeight;
+
+            // If adding this child causes the section to exceed the page height, break out of the loop
+            if (currentHeight > pageHeight) {
+              section.removeChild(child); // Undo the last append if it causes overflow
+              remainingChildren.unshift(child); // Put it back at the beginning of the remaining content
+              break;
+            }
+          }
+        }
+
+        // Set the height of each section to the page height
+        sections.forEach((section) => {
+          // add a header at the top of each page
+          const header = document.createElement("header");
+          header.innerHTML = `<div>${
+            document.title
+          }</div> <div>${new Date().toDateString()}</div>`;
+          section.insertBefore(header, section.firstChild);
+          // add a footer at the bottom of each page
+          const footer = document.createElement("footer");
+          footer.innerHTML = `${sections.indexOf(section) + 1}/${
+            sections.length
+          }`;
+          section.appendChild(footer);
+
+          section.style.height = `${pageHeight}px`;
+        });
+
+        // Finally, remove the original content
+        content.remove();
+      };
+
+      pagenizer();
+    </script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap");
+
+      :root {
+        --background-color: #eeeeee;
+        --border-color: #3d444db3;
+        --default-font: "Open Sans", sans-serif;
+        --blue: #4169e1;
+        --dark: #151515;
+        --green: #2ecc71;
+      }
+
+      * {
+        padding: 0px;
+        margin: 0px;
+        box-sizing: border-box;
+        font-family: var(--default-font);
+      }
+
+      body {
+        background-color: var(--dark);
+        padding: 20px;
+      }
+
+      section {
+        position: relative;
+        display: block;
+        background-color: var(--background-color);
+        border-radius: 5px;
+        padding: 2em;
+        margin-bottom: 1em;
+      }
+
+      pre.prettyprint {
+        padding: 1em !important;
+      }
+
+      pre.prettyprint code span {
+        font-family: "Fira Code", monospace !important;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin-bottom: 1em;
+        font-weight: 600;
+        line-height: 1.25;
+        margin-top: 1.5em;
+      }
+
+      h1 {
+        border-bottom: 1px solid;
+        padding-bottom: 0.3em;
+      }
+
+      h2 {
+        border-bottom: 1px solid;
+        padding-bottom: 0.3em;
+      }
+
+      h1:first-of-type {
+        margin-top: 0;
+      }
+
+      ul {
+        margin-left: 2em;
+        margin-top: 1em;
+      }
+
+      p {
+        margin-bottom: 1em;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+        position: relative;
+      }
+
+      a::after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 2px;
+        background: var(--blue);
+        transition: width 0.3s;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      a:hover::after {
+        width: 100%;
+      }
+
+      code {
+        background-color: var(--dark);
+        border-radius: 5px;
+        color: white;
+        padding: 0.01em 0.3em;
+      }
+
+      blockquote {
+        border-left: 3px solid var(--blue);
+        padding-left: 1em;
+        margin-left: 1em;
+        margin-top: 1em;
+      }
+
+      div.icon {
+        position: relative;
+        display: inline-block;
+      }
+
+      header {
+        height: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 10px;
+      }
+
+      footer {
+        margin-top: 10px;
+        position: absolute;
+        width: calc(100% - 32px * 2);
+        bottom: 32px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1em;
+      }
+
+      th,
+      td {
+        border: 1px solid var(--border-color);
+        padding: 0.5em;
+      }
+
+      th {
+        background-color: var(--background-color);
+      }
+
+      th:first-child,
+      td:first-child {
+        border-left: 0;
+      }
+
+      th:last-child,
+      td:last-child {
+        border-right: 0;
+      }
+
+      input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        position: relative;
+        display: inline-block;
+
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        outline: none;
+        transition: 0.3s;
+      }
+
+      input[type="checkbox"]:checked {
+        background-color: var(--green);
+      }
+
+      input[type="checkbox"]:checked::after {
+        content: "✔";
+        color: white;
+        font-size: 1.2em;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      @media print {
+        body {
+          padding: 0;
+        }
+
+        section {
+          margin-bottom: 0;
+        }
+      }
+    </style>
+    <style>
+      pre .str,
+      code .str {
+        color: #65b042;
+      } /* string  - green */
+      pre .kwd,
+      code .kwd {
+        color: #e28964;
+      } /* keyword - dark pink */
+      pre .com,
+      code .com {
+        color: #aeaeae;
+        font-style: italic;
+      } /* comment - gray */
+      pre .typ,
+      code .typ {
+        color: #89bdff;
+      } /* type - light blue */
+      pre .lit,
+      code .lit {
+        color: #3387cc;
+      } /* literal - blue */
+      pre .pun,
+      code .pun {
+        color: #fff;
+      } /* punctuation - white */
+      pre .pln,
+      code .pln {
+        color: #fff;
+      } /* plaintext - white */
+      pre .tag,
+      code .tag {
+        color: #89bdff;
+      } /* html/xml tag    - light blue */
+      pre .atn,
+      code .atn {
+        color: #bdb76b;
+      } /* html/xml attribute name  - khaki */
+      pre .atv,
+      code .atv {
+        color: #65b042;
+      } /* html/xml attribute value - green */
+      pre .dec,
+      code .dec {
+        color: #3387cc;
+      } /* decimal - blue */
+
+      pre.prettyprint,
+      code.prettyprint {
+        background-color: #151515;
+        border-radius: 8px;
+        border: 1px solid #3d444db3;
+      }
+
+      pre.prettyprint {
+        width: 95%;
+        padding: 1em;
+        white-space: pre-wrap;
+        width: 100%;
+        margin: 1em auto;
+      }
+
+      /* Specify class=linenums on a pre to get line numbering */
+      ol.linenums {
+        margin-top: 0;
+        margin-bottom: 0;
+        color: #aeaeae;
+      } /* IE indents via margin-left */
+      li.L0,
+      li.L1,
+      li.L2,
+      li.L3,
+      li.L5,
+      li.L6,
+      li.L7,
+      li.L8 {
+        list-style-type: none;
+      }
+
+      @media print {
+        pre .str,
+        code .str {
+          color: #060;
+        }
+        pre .kwd,
+        code .kwd {
+          color: #006;
+          font-weight: bold;
+        }
+        pre .com,
+        code .com {
+          color: #600;
+          font-style: italic;
+        }
+        pre .typ,
+        code .typ {
+          color: #404;
+          font-weight: bold;
+        }
+        pre .lit,
+        code .lit {
+          color: #044;
+        }
+        pre .pun,
+        code .pun {
+          color: #440;
+        }
+        pre .pln,
+        code .pln {
+          color: #000;
+        }
+        pre .tag,
+        code .tag {
+          color: #006;
+          font-weight: bold;
+        }
+        pre .atn,
+        code .atn {
+          color: #404;
+        }
+        pre .atv,
+        code .atv {
+          color: #060;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section id="base_content">
+      <!-- MARKDOWN_CONTENT -->
+    </section>
+  </body>
+</html>
