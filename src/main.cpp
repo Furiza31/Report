@@ -14,7 +14,7 @@ int main(int argc, char const *argv[])
   MarkdownConverter markdownConverter;
 
   commandManager.addCommand("help",
-                            {}, "Show all commands\nExample: help\nTips:\n - Use {{ NEW_PAGE }} in the template to jump to a new page\n - This bold strings will be replaced by an icon in the HTML: {{ WARNING }}, {{ INFO }}, {{ TIP }}, {{ NOTE }}, {{ ERROR }}, {{ SUCCESS }}",
+                            {}, "Show all commands\nExample: help\nTips:\n - Use {{ NEW_PAGE }} in the template to jump to a new page\n - This bold strings will be replaced by an icon in the HTML: WARNING, INFO, TIP, NOTE, ERROR, SUCCESS",
                             [&commandManager](const std::vector<string> &params)
                             { commandManager.showHelp(); });
 

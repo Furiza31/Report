@@ -9,7 +9,7 @@ Report is a C++ program that reads a markdown file and generates a report in HTM
 To install the program, you need to clone the repository and compile the source code. The program uses CMake as a build system. To compile the program, you need to run the following commands:
 
 ```bash
-git clone
+git clone --recurse-submodules https://github.com/Furiza31/Report.git
 cd report
 mkdir build
 cd build
