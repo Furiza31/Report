@@ -51,12 +51,16 @@ void MarkdownCreator::createFile(const string &filepath, bool withTemplate)
   {
     if (withTemplate)
     {
-      string MarkdownTemplate = fileUtils.readFile(MARKDOWN_TEMPLATE_PATH);
+      string currentWorkingDirectory = fileUtils.getCurrentWorkingDirectory();
+      cout << "Checking template file: " << currentWorkingDirectory + "/" + MARKDOWN_TEMPLATE_PATH << endl;
+      string MarkdownTemplate = fileUtils.readFile(currentWorkingDirectory + "/" + MARKDOWN_TEMPLATE_PATH);
+      cout << "Read template successfully." << endl;
       fileUtils.replaceStringInFile(MarkdownTemplate, HTML_DATE, MarkdownCreator::getCurrentDate());
       fileUtils.writeFile(filepath, MarkdownTemplate);
     }
     else
     {
+      cout << "Creating file without template." << endl;
       fileUtils.writeFile(filepath, "");
     }
     cout << "File created successfully!" << endl;
@@ -69,6 +73,7 @@ void MarkdownCreator::createFile(const string &filepath, bool withTemplate)
 
 std::string MarkdownCreator::getCurrentDate()
 {
+  cout << "Getting current date..." << endl;
   time_t now = time(0);
   tm *ltm = localtime(&now);
   char dateStr[20];

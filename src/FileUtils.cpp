@@ -1,6 +1,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
+#include <filesystem>
 #include "FileUtils.h"
 
 using std::string;
@@ -43,4 +44,9 @@ void FileUtils::replaceStringInFile(std::string &str, const std::string &from, c
     str.replace(startPos, from.length(), to);
     startPos += to.length(); // Move past the replaced substring
   }
+}
+
+string FileUtils::getCurrentWorkingDirectory()
+{
+  return std::filesystem::current_path().string();
 }
