@@ -25,13 +25,44 @@ file(GLOB SOURCES "src/*.cpp")
 # Add the executable and source files
 add_executable(Report ${SOURCES})
 
-# Link against the cmark-gfm library target
+# Link the cmark-gfm library
 if(CMARK_SHARED)
     target_link_libraries(Report libcmark-gfm)
     target_link_libraries(Report libcmark-gfm-extensions)
 elseif(CMARK_STATIC)
     target_link_libraries(Report libcmark-gfm_static)
     target_link_libraries(Report libcmark-gfm-extensions_static)
+endif()
+
+# Ensure ABI compatibility across all targets
+add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+
+# Special handling for Windows platform
+if(WIN32)
+    set(BUILD_FOR_WIN TRUE)
+    target_compile_definitions(Report PRIVATE _WIN32)
+
+    # Ensure that the DLLs are copied to the output directory after build
+    add_custom_command(TARGET Report POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:libcmark-gfm> $<TARGET_FILE_DIR:Report>)
+
+    add_custom_command(TARGET Report POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:libcmark-gfm-extensions> $<TARGET_FILE_DIR:Report>)
+
+    # Manually copy known MinGW DLLs (adjust path if needed)
+    add_custom_command(TARGET Report POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        /usr/lib/gcc/x86_64-w64-mingw32/10-posix/libstdc++-6.dll $<TARGET_FILE_DIR:Report>)
+
+    add_custom_command(TARGET Report POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        /usr/lib/gcc/x86_64-w64-mingw32/10-posix/libgcc_s_seh-1.dll $<TARGET_FILE_DIR:Report>)
+
+    add_custom_command(TARGET Report POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        /usr/x86_64-w64-mingw32/lib/libwinpthread-1.dll $<TARGET_FILE_DIR:Report>)
 endif()
 
 # Copy the templates directory to the build directory

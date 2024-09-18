@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <ctime>
 #include "MarkdownCreator.h"
 #include "FileUtils.h"
 #include "Config.h"
@@ -66,11 +67,11 @@ void MarkdownCreator::createFile(const string &filepath, bool withTemplate)
   }
 }
 
-string MarkdownCreator::getCurrentDate()
+std::string MarkdownCreator::getCurrentDate()
 {
   time_t now = time(0);
   tm *ltm = localtime(&now);
   char dateStr[20];
   strftime(dateStr, sizeof(dateStr), "%d-%m-%Y", ltm);
-  return dateStr;
+  return std::string(dateStr);
 }
