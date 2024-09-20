@@ -2,7 +2,6 @@
 #define CONFIG_H
 #include <filesystem>
 
-// define a constant for the template path
 #define MARKDOWN_TEMPLATE_PATH std::filesystem::path("templates/default.md").string()
 #define HTML_TEMPLATE_PATH std::filesystem::path("templates/default.html").string()
 #define HTML_WARNING_ICON "<div class='icon'>⚠️</div>"

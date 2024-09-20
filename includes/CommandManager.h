@@ -1,5 +1,3 @@
-// CommandManager.h
-
 #ifndef COMMANDMANAGER_H
 #define COMMANDMANAGER_H
 

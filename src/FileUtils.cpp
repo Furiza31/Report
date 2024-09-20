@@ -2,6 +2,15 @@
 #include <stdexcept>
 #include <iostream>
 #include <filesystem>
+#include <iostream>
+#include <iostream>
+#include <string>
+#ifdef _WIN32
+#include <windows.h>
+#elif __linux__
+#include <unistd.h>
+#include <limits.h>
+#endif
 #include "FileUtils.h"
 
 using std::string;
@@ -38,15 +47,33 @@ void FileUtils::replaceStringInFile(std::string &str, const std::string &from, c
 {
   size_t startPos = 0;
 
-  // Find all occurrences of 'from' and replace with 'to'
   while ((startPos = str.find(from, startPos)) != std::string::npos)
   {
     str.replace(startPos, from.length(), to);
-    startPos += to.length(); // Move past the replaced substring
+    startPos += to.length();
   }
 }
 
-string FileUtils::getCurrentWorkingDirectory()
+string FileUtils::getProgramDirectory()
 {
-  return std::filesystem::current_path().string();
+  char path[PATH_MAX];
+
+#ifdef _WIN32
+  GetModuleFileName(NULL, path, MAX_PATH);
+  std::string fullPath(path);
+  std::size_t pos = fullPath.find_last_of("\\/");
+  std::cout << fullPath << std::endl;
+  return fullPath.substr(0, pos);
+
+#elif __linux__
+  ssize_t count = readlink("/proc/self/exe", path, PATH_MAX);
+  std::string fullPath(path, (count > 0) ? count : 0);
+  std::size_t pos = fullPath.find_last_of("/");
+  std::cout << fullPath << std::endl;
+  return fullPath.substr(0, pos);
+#endif
+
+  std::cout << "Could not determine program directory" << std::endl;
+
+  return std::string();
 }

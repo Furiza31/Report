@@ -30,7 +30,6 @@ void MarkdownCreator::create(const vector<string> &params)
     else
     {
       filepath = param;
-      // check if the last 3 characters are ".md"
       if (param.size() < 3 || param.substr(param.size() - 3) != ".md")
       {
         filepath += ".md";
@@ -51,9 +50,9 @@ void MarkdownCreator::createFile(const string &filepath, bool withTemplate)
   {
     if (withTemplate)
     {
-      string currentWorkingDirectory = fileUtils.getCurrentWorkingDirectory();
-      cout << "Checking template file: " << currentWorkingDirectory + "/" + MARKDOWN_TEMPLATE_PATH << endl;
-      string MarkdownTemplate = fileUtils.readFile(currentWorkingDirectory + "/" + MARKDOWN_TEMPLATE_PATH);
+      cout << "Checking template file." << endl;
+      string programDirectory = fileUtils.getProgramDirectory();
+      string MarkdownTemplate = fileUtils.readFile((programDirectory + "/" + MARKDOWN_TEMPLATE_PATH));
       cout << "Read template successfully." << endl;
       fileUtils.replaceStringInFile(MarkdownTemplate, HTML_DATE, MarkdownCreator::getCurrentDate());
       fileUtils.writeFile(filepath, MarkdownTemplate);

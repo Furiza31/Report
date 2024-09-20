@@ -28,11 +28,14 @@ void MarkdownConverter::convert(const vector<string> &params)
   try
   {
     string markdown = fileUtils.readFile(params[0]);
-    string HTMLTemplate = fileUtils.readFile(HTML_TEMPLATE_PATH);
+    cout << "Checking template file." << endl;
+    string programDirectory = fileUtils.getProgramDirectory();
+    string htmlTemplate = fileUtils.readFile((programDirectory + "/" + HTML_TEMPLATE_PATH));
+    cout << "Read template successfully." << endl;
     string html = convertToHtml(markdown);
-    fileUtils.replaceStringInFile(HTMLTemplate, "<!-- MARKDOWN_CONTENT -->", html);
-    replaceTagsToIcons(HTMLTemplate);
-    fileUtils.writeFile(htmlFileName, HTMLTemplate);
+    fileUtils.replaceStringInFile(htmlTemplate, "<!-- MARKDOWN_CONTENT -->", html);
+    replaceTagsToIcons(htmlTemplate);
+    fileUtils.writeFile(htmlFileName, htmlTemplate);
     cout << "Conversion of " << params[0] << " to " << htmlFileName << " completed successfully\n";
   }
   catch (const std::runtime_error &e)
