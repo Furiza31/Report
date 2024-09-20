@@ -2,8 +2,13 @@
 #define CONFIG_H
 #include <filesystem>
 
-#define MARKDOWN_TEMPLATE_PATH std::filesystem::path("templates/default.md").string()
-#define HTML_TEMPLATE_PATH std::filesystem::path("templates/default.html").string()
+#ifdef _WIN32
+#define PATH_SEPARATOR "\\"
+#else
+#define PATH_SEPARATOR "/"
+#endif
+#define MARKDOWN_TEMPLATE_PATH (std::filesystem::path("templates") / "default.md").string()
+#define HTML_TEMPLATE_PATH (std::filesystem::path("templates") / "default.html").string()
 #define HTML_WARNING_ICON "<div class='icon'>⚠️</div>"
 #define HTML_WARNING_TAG "<strong>WARNING</strong>"
 #define HTML_TIP_ICON "<div class='icon'>💡</div>"
@@ -19,10 +24,5 @@
 #define HTML_NEW_PAGE "{{ NEW_PAGE }}"
 #define HTML_NEW_PAGE_REPLACEMENT "<div class='new_page'></div>"
 #define HTML_DATE "{{ DATE }}"
-#ifdef _WIN32
-#define PATH_SEPARATOR "\\"
-#else
-#define PATH_SEPARATOR "/"
-#endif
 
 #endif

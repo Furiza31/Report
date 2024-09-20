@@ -31,8 +31,8 @@ void MarkdownConverter::convert(const vector<string> &params)
   {
     string markdown = fileUtils.readFile(params[0]);
     cout << "Checking template file." << endl;
-
     string programDirectory = fileUtils.getProgramDirectory();
+    cout << "Template directory " << programDirectory + PATH_SEPARATOR + HTML_TEMPLATE_PATH << endl;
     string htmlTemplate = fileUtils.readFile((programDirectory + PATH_SEPARATOR + HTML_TEMPLATE_PATH));
 
     cout << "Read template successfully." << endl;

@@ -54,7 +54,7 @@ void MarkdownCreator::createFile(const string &filepath, bool withTemplate)
       cout << "Checking template file." << endl;
 
       string programDirectory = fileUtils.getProgramDirectory();
-      cout << "Program directory: " << programDirectory + PATH_SEPARATOR + MARKDOWN_TEMPLATE_PATH << endl;
+      cout << "Template directory " << programDirectory + PATH_SEPARATOR + MARKDOWN_TEMPLATE_PATH << endl;
       string markdownTemplate = fileUtils.readFile(programDirectory + PATH_SEPARATOR + MARKDOWN_TEMPLATE_PATH);
       cout << "Read template successfully." << endl;
 
