@@ -4,6 +4,15 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <string>
+
+#ifdef _WIN32
+// Include Windows-specific headers here if needed
+#include <windows.h>
+#elif defined(__linux__)
+// Include Linux-specific headers here if needed
+#include <unistd.h>
+#endif
 
 using std::string;
 

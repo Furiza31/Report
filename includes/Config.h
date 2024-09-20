@@ -19,5 +19,10 @@
 #define HTML_NEW_PAGE "{{ NEW_PAGE }}"
 #define HTML_NEW_PAGE_REPLACEMENT "<div class='new_page'></div>"
 #define HTML_DATE "{{ DATE }}"
+#ifdef _WIN32
+#define PATH_SEPARATOR "\\"
+#else
+#define PATH_SEPARATOR "/"
+#endif
 
 #endif

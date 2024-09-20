@@ -2,17 +2,18 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include <iostream>
 #include <ctime>
+#include <filesystem>
 #include "MarkdownCreator.h"
 #include "FileUtils.h"
 #include "Config.h"
 
 using namespace std;
+namespace fs = std::filesystem;
 
 void MarkdownCreator::create(const vector<string> &params)
 {
-  string filepath = "./report.md";
+  fs::path filepath = "report.md";
   bool withTemplate = true;
 
   if (params.size() > 2)
@@ -30,13 +31,13 @@ void MarkdownCreator::create(const vector<string> &params)
     else
     {
       filepath = param;
-      if (param.size() < 3 || param.substr(param.size() - 3) != ".md")
+      if (filepath.extension() != ".md")
       {
         filepath += ".md";
       }
     }
   }
-  MarkdownCreator::createFile(filepath, withTemplate);
+  MarkdownCreator::createFile(filepath.string(), withTemplate);
 }
 
 void MarkdownCreator::createFile(const string &filepath, bool withTemplate)
@@ -51,11 +52,17 @@ void MarkdownCreator::createFile(const string &filepath, bool withTemplate)
     if (withTemplate)
     {
       cout << "Checking template file." << endl;
+
       string programDirectory = fileUtils.getProgramDirectory();
-      string MarkdownTemplate = fileUtils.readFile((programDirectory + "/" + MARKDOWN_TEMPLATE_PATH));
+
+      fs::path markdownTemplatePath = fs::path(programDirectory) / MARKDOWN_TEMPLATE_PATH;
+
+      string markdownTemplate = fileUtils.readFile(markdownTemplatePath.string());
       cout << "Read template successfully." << endl;
-      fileUtils.replaceStringInFile(MarkdownTemplate, HTML_DATE, MarkdownCreator::getCurrentDate());
-      fileUtils.writeFile(filepath, MarkdownTemplate);
+
+      fileUtils.replaceStringInFile(markdownTemplate, HTML_DATE, MarkdownCreator::getCurrentDate());
+
+      fileUtils.writeFile(filepath, markdownTemplate);
     }
     else
     {

@@ -17,6 +17,7 @@ void MarkdownConverter::convert(const vector<string> &params)
     cerr << "Invalid number of parameters\n";
     return;
   }
+
   if (params[0].size() < 3 || params[0].substr(params[0].size() - 3) != ".md")
   {
     throw std::runtime_error("Invalid file extension. Please provide a markdown file with a .md extension");
@@ -25,17 +26,25 @@ void MarkdownConverter::convert(const vector<string> &params)
   {
     htmlFileName = params[0].substr(0, params[0].size() - 3) + ".html";
   }
+
   try
   {
     string markdown = fileUtils.readFile(params[0]);
     cout << "Checking template file." << endl;
+
     string programDirectory = fileUtils.getProgramDirectory();
-    string htmlTemplate = fileUtils.readFile((programDirectory + "/" + HTML_TEMPLATE_PATH));
+    string htmlTemplate = fileUtils.readFile((programDirectory + PATH_SEPARATOR + HTML_TEMPLATE_PATH));
+
     cout << "Read template successfully." << endl;
+
     string html = convertToHtml(markdown);
+
     fileUtils.replaceStringInFile(htmlTemplate, "<!-- MARKDOWN_CONTENT -->", html);
+
     replaceTagsToIcons(htmlTemplate);
+
     fileUtils.writeFile(htmlFileName, htmlTemplate);
+
     cout << "Conversion of " << params[0] << " to " << htmlFileName << " completed successfully\n";
   }
   catch (const std::runtime_error &e)
@@ -64,6 +73,7 @@ string MarkdownConverter::convertToHtml(const string &markdown)
 
   cmark_node *document = cmark_parser_finish(parser);
   char *html = cmark_render_html(document, CMARK_OPT_DEFAULT, NULL);
+
   cmark_node_free(document);
   cmark_parser_free(parser);
 
